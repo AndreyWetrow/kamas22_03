@@ -1,6 +1,10 @@
 import React from "react";
 import Post from "./Post/Post";
 import classes from "./MyPosts.module.css";
+import {
+  addPostActionCreator,
+  updateNewPostTextActionCreator,
+} from "../../../redux/state";
 
 const MyPosts = (props) => {
   const postsElements = props.posts.map((post) => {
@@ -14,13 +18,13 @@ const MyPosts = (props) => {
   const addPost = () => {
     // let text = newPostElement.current.value;
     // props.addPost(text);
-    props.addPost();
+    props.dispatch(addPostActionCreator());
     // props.updateNewPostText("");
     // newPostElement.current.value = "";
   };
 
-  const onPostChange = (text) => {
-    props.updateNewPostText(text);
+  const onPostChange = (e) => {
+    props.dispatch(updateNewPostTextActionCreator(e.target.value));
   };
 
   return (
@@ -29,9 +33,7 @@ const MyPosts = (props) => {
       <div>
         <textarea
           ref={newPostElement}
-          onChange={(e) => {
-            onPostChange(e.target.value);
-          }}
+          onChange={onPostChange}
           name=""
           id=""
           cols="15"

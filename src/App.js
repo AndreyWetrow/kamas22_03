@@ -4,7 +4,6 @@ import Navbar from "./components/Navbar/Navbar";
 import Profile from "./components/Profile/Profile";
 import Dialogs from "./components/Dialogs/Dialogs";
 import { Routes, Route } from "react-router-dom";
-import { updateNewMessageText } from "./redux/state";
 
 function App(props) {
   return (
@@ -18,8 +17,7 @@ function App(props) {
             element={
               <Profile
                 profilePage={props.state.profilePage}
-                addPost={props.addPost}
-                updateNewPostText={props.updateNewPostText}
+                dispatch={props.dispatch}
               />
             }
           />
@@ -28,8 +26,9 @@ function App(props) {
             element={
               <Dialogs
                 dialogsPage={props.state.dialogsPage}
-                addMessage={props.addMessage}
-                updateNewMessageText={updateNewMessageText}
+                dispatch={props.dispatch}
+                // addMessage={props.addMessage}
+                // updateNewMessageText={props.updateNewMessageText}
               />
             }
           />

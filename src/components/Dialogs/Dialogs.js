@@ -4,29 +4,12 @@ import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
 import MessageTextarea from "./MessageTextarea/MessageTextarea";
 
-const Dialogs = (props) => {
-  // const dialogs = [
-  //   { id: 1, name: "Vasja" },
-  //   { id: 2, name: "Olja" },
-  //   { id: 3, name: "Andrey" },
-  //   { id: 4, name: "Sanja" },
-  //   { id: 5, name: "Pasha" },
-  //   { id: 5, name: "Pasha" },
-  // ];
-  //
-  // const messages = [
-  //   { id: 1, message: "Hello" },
-  //   { id: 2, message: "Bay" },
-  //   { id: 3, message: "How are you" },
-  //   { id: 4, message: "Fine" },
-  //   { id: 5, message: "good night" },
-  // ];
-
-  const dialogsElements = props.dialogsPage.dialogs.map((dialog) => {
+const Dialogs = ({ dialogsPage, dispatch }) => {
+  const dialogsElements = dialogsPage.dialogs.map((dialog) => {
     return <DialogItem key={dialog.id} name={dialog.name} id={dialog.id} />;
   });
 
-  const messagesElements = props.dialogsPage.messages.map((message) => {
+  const messagesElements = dialogsPage.messages.map((message) => {
     return <Message key={message.id} message={message.message} />;
   });
   return (
@@ -35,8 +18,8 @@ const Dialogs = (props) => {
       <div>
         <div className={classes.messages}>{messagesElements}</div>
         <MessageTextarea
-          addMessage={props.addMessage}
-          updateNewMessageText={props.updateNewMessageText}
+          dispatch={dispatch}
+          newMessageBody={dialogsPage.newMessageBody}
         />
       </div>
     </div>
