@@ -4,12 +4,14 @@ import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
 import MessageTextarea from "./MessageTextarea/MessageTextarea";
 
-const Dialogs = ({ dialogsPage, dispatch }) => {
-  const dialogsElements = dialogsPage.dialogs.map((dialog) => {
+const Dialogs = (props) => {
+  const state = props.dialogsPage;
+
+  const dialogsElements = state.dialogs.map((dialog) => {
     return <DialogItem key={dialog.id} name={dialog.name} id={dialog.id} />;
   });
 
-  const messagesElements = dialogsPage.messages.map((message) => {
+  const messagesElements = state.messages.map((message) => {
     return <Message key={message.id} message={message.message} />;
   });
   return (
@@ -18,8 +20,9 @@ const Dialogs = ({ dialogsPage, dispatch }) => {
       <div>
         <div className={classes.messages}>{messagesElements}</div>
         <MessageTextarea
-          dispatch={dispatch}
-          newMessageBody={dialogsPage.newMessageBody}
+          updateNewMessageBody={props.updateNewMessageBody}
+          sendMessage={props.sendMessage}
+          newMessageBody={props.dialogsPage.newMessageBody}
         />
       </div>
     </div>

@@ -1,17 +1,13 @@
 import React from "react";
 import classes from "./MessageTextarea.module.css";
-import {
-  sendMessageCreator,
-  updateNewMessageBodyCreator,
-} from "../../../redux/state";
 
-const MessageTextarea = ({ dispatch, newMessageBody }) => {
+const MessageTextarea = (props) => {
   const onNewMessageChange = (e) => {
     const body = e.target.value;
-    dispatch(updateNewMessageBodyCreator(body));
+    props.updateNewMessageBody(body);
   };
   const onSendMessageClick = () => {
-    dispatch(sendMessageCreator());
+    props.sendMessage();
   };
 
   return (
@@ -22,7 +18,7 @@ const MessageTextarea = ({ dispatch, newMessageBody }) => {
         cols="15"
         rows="2"
         placeholder={"Enter message"}
-        value={newMessageBody}
+        value={props.newMessageBody}
       />
       <button onClick={onSendMessageClick}>Send</button>
     </div>
