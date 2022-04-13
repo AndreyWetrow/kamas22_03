@@ -28,17 +28,17 @@ const Navbar = (props) => {
         </NavLink>
       </div>
       <div className={classes.item}>
-        <NavLink to={"/news"} className={"tets"}>
+        <NavLink to={"/news"} className={"test"}>
           News
         </NavLink>
       </div>
       <div className={classes.item}>
-        <a href={"#"} className={"tets"}>
+        <a href={"#"} className={"test"}>
           Music
         </a>
       </div>
       <div className={classes.item}>
-        <a href={"#"} className={"tets"}>
+        <a href={"#"} className={"test"}>
           Settings
         </a>
       </div>
