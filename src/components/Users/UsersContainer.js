@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import {
-  followAC,
-  setCurrentPageAC,
-  setTotalUsersCountAC,
-  setUsersAC,
-  toggleIsFetchingAC,
-  unFollowAC,
+  follow,
+  setCurrentPage,
+  setTotalUsersCount,
+  setUsers,
+  toggleIsFetching,
+  unFollow,
 } from "../../redux/users-reducer";
 import axios from "axios";
 import Users from "./Users";
@@ -44,6 +44,25 @@ class UsersContainer extends React.Component {
   //     location: { city: "Tokio", country: "Japan" },
   //   },
   // ]
+  // componentDidMount() {
+  //   this.props.toggleIsFetching(true);
+  //
+  //   let resArrow = [];
+  //   axios
+  //     .get("https://itcamas2022-default-rtdb.firebaseio.com/users.json")
+  //     .then((res) => {
+  //       for (const resKey in res.data) {
+  //         resArrow.push(res.data[resKey]);
+  //       }
+  //       this.props.setUsers(resArrow);
+  //     });
+  //   this.props.toggleIsFetching(false);
+  //   axios
+  //     .get("https://itcamas2022-default-rtdb.firebaseio.com/totalCount.json")
+  //     .then((res) => {
+  //       this.props.setTotalUsersCount(res.data);
+  //     });
+  // }
   componentDidMount() {
     this.props.toggleIsFetching(true);
 
@@ -55,12 +74,14 @@ class UsersContainer extends React.Component {
           resArrow.push(res.data[resKey]);
         }
         this.props.setUsers(resArrow);
-      });
-    this.props.toggleIsFetching(false);
-    axios
-      .get("https://itcamas2022-default-rtdb.firebaseio.com/totalCount.json")
-      .then((res) => {
-        this.props.setTotalUsersCount(res.data);
+        axios
+          .get(
+            "https://itcamas2022-default-rtdb.firebaseio.com/totalCount.json"
+          )
+          .then((res) => {
+            this.props.setTotalUsersCount(res.data);
+            this.props.toggleIsFetching(false);
+          });
       });
   }
 
@@ -108,27 +129,28 @@ const mapStateToProps = (state) => {
     isFetching: state.usersPage.isFetching,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  return {
-    follow: (userId) => {
-      dispatch(followAC(userId));
-    },
-    unfollow: (userId) => {
-      dispatch(unFollowAC(userId));
-    },
-    setUsers: (users) => {
-      dispatch(setUsersAC(users));
-    },
-    setCurrentPage: (pageNumber) => {
-      dispatch(setCurrentPageAC(pageNumber));
-    },
-    setTotalUsersCount: (totalCount) => {
-      dispatch(setTotalUsersCountAC(totalCount));
-    },
-    toggleIsFetching: (isFetching) => {
-      dispatch(toggleIsFetchingAC(isFetching));
-    },
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     follow: followAC,
+//     unfollow: unFollowAC,
+//     setUsers: setUsersAC,
+//     setCurrentPage: setCurrentPageAC,
+//     setTotalUsersCount: setTotalUsersCountAC,
+//     toggleIsFetching: toggleIsFetchingAC,
+//     // setTotalUsersCount: (totalCount) => {
+//     //   dispatch(setTotalUsersCountAC(totalCount));
+//     // },
+//     // toggleIsFetching: (isFetching) => {
+//     //   dispatch(toggleIsFetchingAC(isFetching));
+//     // },
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UsersContainer);
+export default connect(mapStateToProps, {
+  follow,
+  unFollow,
+  setUsers,
+  setCurrentPage,
+  setTotalUsersCount,
+  toggleIsFetching,
+})(UsersContainer);
