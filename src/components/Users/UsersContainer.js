@@ -2,15 +2,13 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   follow,
+  getUsers,
   setCurrentPage,
-  setTotalUsersCount,
-  setUsers,
-  toggleIsFetching,
-  unFollow,
+  setCurrentPageThunkCreator,
+  toggleFollowingProgress,
+  unfollow,
 } from "../../redux/users-reducer";
-import axios from "axios";
 import Users from "./Users";
-import preloader from "../../assets/images/spinner.svg";
 import Preloader from "../common/Preloader/Preloader";
 
 class UsersContainer extends React.Component {
@@ -64,42 +62,46 @@ class UsersContainer extends React.Component {
   //     });
   // }
   componentDidMount() {
-    this.props.toggleIsFetching(true);
+    this.props.getUsers();
 
-    let resArrow = [];
-    axios
-      .get("https://itcamas2022-default-rtdb.firebaseio.com/users.json")
-      .then((res) => {
-        for (const resKey in res.data) {
-          resArrow.push(res.data[resKey]);
-        }
-        this.props.setUsers(resArrow);
-        axios
-          .get(
-            "https://itcamas2022-default-rtdb.firebaseio.com/totalCount.json"
-          )
-          .then((res) => {
-            this.props.setTotalUsersCount(res.data);
-            this.props.toggleIsFetching(false);
-          });
-      });
+    // this.props.toggleIsFetching(true);
+    //
+    // let resArrow = [];
+    //
+    // userAPI.getUsers().then((data) => {
+    //   for (const resKey in data) {
+    //     let arrItem = { ...data[resKey], userKey: resKey };
+    //
+    //     resArrow.push(arrItem);
+    //   }
+    //
+    //   this.props.setUsers(resArrow);
+    //   userAPI.getTotalCount().then((data) => {
+    //     this.props.setTotalUsersCount(data);
+    //     this.props.toggleIsFetching(false);
+    //   });
+    // });
   }
 
   onPageChanged = (pageNumber) => {
-    let resArrow = [];
-    this.props.setCurrentPage(pageNumber);
-    this.props.toggleIsFetching(true);
-    axios
-      .get("https://itcamas2022-default-rtdb.firebaseio.com/users.json")
-      .then((res) => {
-        for (const resKey in res.data) {
-          if (pageNumber === res.data[resKey].id) {
-            resArrow.push(res.data[resKey]);
-          }
-        }
-        this.props.setUsers(resArrow);
-        this.props.toggleIsFetching(false);
-      });
+    this.props.setCurrentPageThunkCreator(pageNumber);
+
+    // let resArrow = [];
+    // this.props.setCurrentPage(pageNumber);
+    // this.props.toggleIsFetching(true);
+    //
+    // userAPI.getUsers().then((data) => {
+    //   for (const resKey in data) {
+    //     let arrItem = { ...data[resKey], userKey: resKey };
+    //
+    //     if (pageNumber === data[resKey].id) {
+    //       resArrow.push(arrItem);
+    //     }
+    //   }
+    //
+    //   this.props.setUsers(resArrow);
+    //   this.props.toggleIsFetching(false);
+    // });
   };
 
   render() {
@@ -113,6 +115,8 @@ class UsersContainer extends React.Component {
           users={this.props.users}
           follow={this.props.follow}
           unfollow={this.props.unfollow}
+          // toggleFollowingProgress={this.props.toggleFollowingProgress}
+          followingInProgress={this.props.followingInProgress}
           onPageChanged={this.onPageChanged}
         />
       </>
@@ -127,6 +131,7 @@ const mapStateToProps = (state) => {
     totalUsersCount: state.usersPage.totalUsersCount,
     currentPage: state.usersPage.currentPage,
     isFetching: state.usersPage.isFetching,
+    followingInProgress: state.usersPage.followingInProgress,
   };
 };
 // const mapDispatchToProps = (dispatch) => {
@@ -148,9 +153,9 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   follow,
-  unFollow,
-  setUsers,
+  unfollow,
   setCurrentPage,
-  setTotalUsersCount,
-  toggleIsFetching,
+  toggleFollowingProgress,
+  getUsers,
+  setCurrentPageThunkCreator,
 })(UsersContainer);

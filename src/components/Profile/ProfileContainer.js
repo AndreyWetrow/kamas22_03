@@ -1,9 +1,10 @@
 import React from "react";
 import Profile from "./Profile";
-import axios from "axios";
 import { connect } from "react-redux";
-import { setUserProfile } from "../../redux/profile-reducer";
+import { getUserProfile } from "../../redux/profile-reducer";
 import { getURLParams } from "../../hoc/GetURLParams/GetURLParams";
+import { withAuthRedirect } from "../../hoc/WithAuthRedirect";
+import { compose } from "redux";
 
 class ProfileContainer extends React.Component {
   componentDidMount() {
@@ -12,23 +13,22 @@ class ProfileContainer extends React.Component {
       userId = 2;
     }
 
-    let data = {};
-    let photo = "";
-    axios
-      .get(`https://jsonplaceholder.typicode.com/users/${userId}`)
-      .then((res) => {
-        data = res.data;
-        axios
-          .get(`https://jsonplaceholder.typicode.com/photos/${userId}`)
-          .then((res) => {
-            const bigPhoto = res.data.url;
-            const littlePhoto = res.data.thumbnailUrl;
-            this.props.setUserProfile({
-              ...data,
-              photo: { ...photo, bigPhoto, littlePhoto },
-            });
-          });
-      });
+    this.props.getUserProfile(userId);
+
+    // let data = {};
+    // let photo = "";
+    //
+    // userAPI.getUser(userId).then((res) => {
+    //   data = res;
+    //   userAPI.getPhoto(userId).then((res) => {
+    //     const bigPhoto = res.url;
+    //     const littlePhoto = res.thumbnailUrl;
+    //     this.props.setUserProfile({
+    //       ...data,
+    //       photo: { ...photo, bigPhoto, littlePhoto },
+    //     });
+    //   });
+    // });
   }
 
   render() {
@@ -39,13 +39,22 @@ class ProfileContainer extends React.Component {
     );
   }
 }
-
 const mapStateToProps = (state) => {
   return { profile: state.profilePage.profile };
 };
 
-const withUrlDataContainerComponent = getURLParams(ProfileContainer);
+export default compose(
+  connect(mapStateToProps, {
+    getUserProfile,
+  }),
+  getURLParams
+   withAuthRedirect
+)(ProfileContainer);
 
-export default connect(mapStateToProps, {
-  setUserProfile,
-})(withUrlDataContainerComponent);
+// let AuthRedirectComponent = withAuthRedirect(ProfileContainer);
+//
+// const withUrlDataContainerComponent = getURLParams(AuthRedirectComponent);
+//
+// export default connect(mapStateToProps, {
+//   getUserProfile,
+// })(withUrlDataContainerComponent);

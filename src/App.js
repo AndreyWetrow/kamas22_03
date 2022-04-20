@@ -4,8 +4,8 @@ import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import NavbarContainer from "./components/Navbar/NavbarContainer";
 import UsersContainer from "./components/Users/UsersContainer";
 import ProfileContainer from "./components/Profile/ProfileContainer";
-import ProfileInfo from "./components/Profile/ProfileInfo/ProfileInfo";
 import HeaderContainer from "./components/Header/HeaderContainer";
+import Login from "./components/Login/Login";
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
       {/*<Navbar friends={props.state.sidebar.friends} />*/}
       <div className={"app-wrapper-content"}>
         <Routes>
+          <Route path="login" element={<Login />} />
           <Route path="profile" element={<ProfileContainer />} />
           <Route path="profile/:userId" element={<ProfileContainer />} />
           <Route path="dialogs" element={<DialogsContainer />} />
