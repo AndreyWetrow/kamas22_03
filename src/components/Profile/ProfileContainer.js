@@ -47,8 +47,8 @@ export default compose(
   connect(mapStateToProps, {
     getUserProfile,
   }),
-  getURLParams
-   withAuthRedirect
+  getURLParams,
+  withAuthRedirect
 )(ProfileContainer);
 
 // let AuthRedirectComponent = withAuthRedirect(ProfileContainer);
