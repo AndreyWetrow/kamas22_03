@@ -27,8 +27,6 @@ const MyPosts = (props) => {
         <textarea
           ref={newPostElement}
           onChange={onPostChange}
-          name=""
-          id=""
           cols="15"
           value={props.newPostText}
         />

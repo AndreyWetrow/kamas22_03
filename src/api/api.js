@@ -12,15 +12,26 @@ const instanceAuth = axios.create({
 });
 
 export const userAPI = {
+  // getProfile(userId) {
+  //   return instancePlaceholder.get(`users/${userId}`).then((response) => {
+  //     return response.data;
+  //   });
+  // },
+
   getProfile(userId) {
-    return instancePlaceholder
-      .get(`users/${userId}`)
-      .then((response) => response.data);
+    console.warn("Obsolete method. Use profileAPI");
+
+    return profileAPI.getProfile(userId);
   },
   getPhoto(userId) {
     return instancePlaceholder
       .get(`photos/${userId}`)
       .then((response) => response.data);
+  },
+  getUser(id) {
+    return instanceFirebase.get("users.json").then((response) => {
+      console.log(response.data);
+    });
   },
   getUsers() {
     return instanceFirebase.get("users.json").then((response) => response.data);
@@ -49,5 +60,41 @@ export const authAPI = {
   },
   me() {
     return instanceAuth.post(``, this.authData);
+  },
+};
+
+export const profileAPI = {
+  getProfile(userId) {
+    return instancePlaceholder.get(`users/${userId}`).then((response) => {
+      return response.data;
+    });
+  },
+  getProfileForStatus(userId) {
+    return instanceFirebase.get("users.json").then((response) => {
+      let userProfile = Object.entries(response.data).filter((item) => {
+        return item[1].id === +userId;
+      });
+
+      return userProfile[0][1].status;
+    });
+  },
+
+  updateStatusUser(userId, status) {
+    return instanceFirebase
+      .get("users.json")
+      .then((response) => {
+        let userProfile = Object.entries(response.data).filter((item) => {
+          return item[1].id === +userId;
+        });
+
+        return userProfile[0][0];
+      })
+      .then((userKey) => {
+        return instanceFirebase
+          .patch(`users/${userKey}.json`, { status: status })
+          .then((response) => {
+            return response;
+          });
+      });
   },
 };

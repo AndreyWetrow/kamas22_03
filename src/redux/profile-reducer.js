@@ -1,8 +1,9 @@
-import { userAPI } from "../api/api";
+import { profileAPI, userAPI } from "../api/api";
 
 const ADD_POST = "ADD_POST";
 const UPDATE_NEW_POST_TEXT = "UPDATE_NEW_POST_TEXT";
 const SET_USER_PROFILE = "SET_USER_PROFILE";
+const SET_STATUS = "SET_STATUS";
 
 const initialState = {
   posts: [
@@ -11,6 +12,7 @@ const initialState = {
   ],
   newPostText: "",
   profile: null,
+  status: "",
   // photo: { url: "", thumbnailUrl: "" },
 };
 
@@ -47,6 +49,13 @@ const profileReducer = (state = initialState, action) => {
       return { ...state, profile: action.profile };
     }
 
+    case SET_STATUS: {
+      return {
+        ...state,
+        status: action.status,
+      };
+    }
+
     default:
       return state;
   }
@@ -62,16 +71,21 @@ export const setUserProfile = (profile) => {
   return { type: SET_USER_PROFILE, profile };
 };
 
+export const setStatus = (status) => {
+  return { type: SET_STATUS, status };
+};
+
 export const getUserProfile = (userId) => {
   return (dispatch) => {
-    let data = {};
     let photo = "";
 
-    userAPI.getProfile(userId).then((res) => {
-      data = res;
+    userAPI.getProfile(userId).then((profile) => {
+      let data = profile;
+
       userAPI.getPhoto(userId).then((res) => {
         const bigPhoto = res.url;
         const littlePhoto = res.thumbnailUrl;
+
         dispatch(
           setUserProfile({
             ...data,
@@ -81,6 +95,20 @@ export const getUserProfile = (userId) => {
       });
     });
   };
+};
+
+export const getStatus = (userId) => (dispatch) => {
+  profileAPI.getProfileForStatus(userId).then((status) => {
+    dispatch(setStatus(status));
+  });
+};
+
+export const updateStatus = (userId, status) => (dispatch) => {
+  profileAPI.updateStatusUser(userId, status).then((response) => {
+    if (+response.status === 200) {
+      dispatch(setStatus(status));
+    }
+  });
 };
 
 export default profileReducer;

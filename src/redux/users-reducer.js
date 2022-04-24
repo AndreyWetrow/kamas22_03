@@ -15,6 +15,7 @@ const initialState = {
   currentPage: 1,
   isFetching: true,
   followingInProgress: [],
+  status: "",
 };
 
 const usersReducer = (state = initialState, action) => {
