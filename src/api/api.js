@@ -53,13 +53,19 @@ export const userAPI = {
   },
 };
 export const authAPI = {
-  authData: {
-    email: "test@mail.ru",
-    password: "123456",
-    returnSecureToken: true,
+  // authData: {
+  //   email: "test@mail.ru",
+  //   password: "123456",
+  //   returnSecureToken: true,
+  // },
+  me(email, password, rememberMe) {
+    return instanceAuth.post(``, { email, password, rememberMe });
   },
-  me() {
-    return instanceAuth.post(``, this.authData);
+  login(email, password, rememberMe = false) {
+    return instanceAuth.post(``, { email, password, rememberMe });
+  },
+  logout(email, password, rememberMe = false) {
+    return instanceAuth.post(``, { email, password, rememberMe });
   },
 };
 

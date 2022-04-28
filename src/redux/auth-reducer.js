@@ -12,25 +12,57 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER_DATA:
-      return { ...state, ...action.data, isAuth: true };
+      return { ...state, ...action.payload };
 
     default:
       return state;
   }
 };
 
-export const setAuthUserData = (userId, email) => {
-  return { type: SET_USER_DATA, data: { userId, email } };
+export const setAuthUserData = (userId, email, isAuth) => {
+  return { type: SET_USER_DATA, payload: { userId, email, isAuth } };
 };
 
-export const getAuthUserData = () => {
+export const getAuthUserData = (
+  email = "",
+  password = "",
+  rememberMe = false
+) => {
   return (dispatch) => {
-    authAPI.me().then((res) => {
+    authAPI.me(email, password, rememberMe).then((res) => {
       if (res.data.registered) {
         let { localId, email } = res.data;
-        dispatch(setAuthUserData(localId, email));
+        dispatch(setAuthUserData(localId, email, true));
       }
     });
+  };
+  // return (dispatch) => {
+  //   authAPI.me().then((res) => {
+  //     if (res.data.registered) {
+  //       let { localId, email } = res.data;
+  //       dispatch(setAuthUserData(localId, email, true));
+  //     }
+  //   });
+  // };
+};
+export const login = (email, password, rememberMe) => {
+  return (dispatch) => {
+    authAPI.login(email, password, rememberMe).then((res) => {
+      if (res.data.registered) {
+        dispatch(getAuthUserData(email, password, rememberMe));
+      }
+    });
+  };
+};
+export const logout = () => {
+  return (dispatch) => {
+    dispatch(setAuthUserData(null, null, false));
+
+    // authAPI.logout().then((res) => {
+    //   if (res.data.registered) {
+    //     dispatch(setAuthUserData(null, null, false));
+    //   }
+    // });
   };
 };
 

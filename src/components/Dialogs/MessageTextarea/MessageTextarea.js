@@ -1,28 +1,39 @@
 import React from "react";
+import { Form, Field } from "react-final-form";
 import classes from "./MessageTextarea.module.css";
+import {
+  composeValidators,
+  maxLength,
+  required,
+} from "../../../utils/validators/validators";
+import { Textarea } from "../../common/FormsControls/FormControls";
 
-const MessageTextarea = (props) => {
-  const onNewMessageChange = (e) => {
-    const body = e.target.value;
-    props.updateNewMessageBody(body);
-  };
-  const onSendMessageClick = () => {
-    props.sendMessage();
-  };
-
+const AddMessageForm = (props) => {
   return (
-    <div className={classes.messageTextarea}>
-      <textarea
-        onChange={onNewMessageChange}
-        className={classes.textarea}
-        cols="15"
-        rows="2"
-        placeholder={"Enter message"}
-        value={props.newMessageBody}
-      />
-      <button onClick={onSendMessageClick}>Send</button>
-    </div>
+    <Form
+      onSubmit={props.onSubmit}
+      render={({ handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <div className={classes.messageTextarea}>
+            <Field
+              name="newMessageBody"
+              validate={composeValidators(required, maxLength(100))}
+            >
+              {({ input, meta }) => (
+                <Textarea
+                  input={input}
+                  meta={meta}
+                  placeholder="Введите сообщение пользователю"
+                />
+              )}
+            </Field>
+
+            <button>Send</button>
+          </div>
+        </form>
+      )}
+    />
   );
 };
 
-export default MessageTextarea;
+export default AddMessageForm;

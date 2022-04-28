@@ -1,6 +1,14 @@
 import React from "react";
+import { Form, Field } from "react-final-form";
 import Post from "./Post/Post";
 import classes from "./MyPosts.module.css";
+import {
+  composeValidators,
+  maxLength,
+  minLength,
+  required,
+} from "../../../utils/validators/validators";
+import { Textarea } from "../../common/FormsControls/FormControls";
 
 const MyPosts = (props) => {
   const postsElements = props.posts.map((post) => {
@@ -9,31 +17,43 @@ const MyPosts = (props) => {
     );
   });
 
-  let newPostElement = React.createRef();
-
-  const onAddPost = () => {
-    props.addPost();
-  };
-
-  const onPostChange = (e) => {
-    const text = e.target.value;
-    props.updateNewPostText(text);
+  const onAddPost = (values) => {
+    props.addPost(values.newPostText);
   };
 
   return (
     <div className={classes.postsBlock}>
       <h3>My posts</h3>
-      <div>
-        <textarea
-          ref={newPostElement}
-          onChange={onPostChange}
-          cols="15"
-          value={props.newPostText}
-        />
-      </div>
-      <div>
-        <button onClick={onAddPost}>Add post</button>
-      </div>
+
+      <Form
+        onSubmit={onAddPost}
+        render={({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <div>
+              <Field
+                name="newPostText"
+                validate={composeValidators(
+                  required,
+                  maxLength(10),
+                  minLength(5)
+                )}
+              >
+                {({ input, meta }) => (
+                  <Textarea
+                    input={input}
+                    meta={meta}
+                    placeholder="Введите сообщение "
+                  />
+                )}
+              </Field>
+            </div>
+            <div>
+              <button>Add post</button>
+            </div>
+          </form>
+        )}
+      />
+
       <div className={classes.posts}>{postsElements}</div>
     </div>
   );

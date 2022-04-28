@@ -8,6 +8,7 @@ import {
 } from "../../redux/profile-reducer";
 import { getURLParams } from "../../hoc/GetURLParams/GetURLParams";
 import { compose } from "redux";
+import { withAuthRedirect } from "../../hoc/WithAuthRedirect";
 
 class ProfileContainer extends React.Component {
   constructor(props) {
@@ -38,6 +39,10 @@ class ProfileContainer extends React.Component {
     //   });
     // });
   }
+
+  onSubmit = (values) => {
+    console.log(values);
+  };
 
   render() {
     return (
