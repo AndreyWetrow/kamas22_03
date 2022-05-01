@@ -9,6 +9,8 @@ import { Input } from "../common/FormsControls/FormControls";
 import { connect } from "react-redux";
 import { login } from "../../redux/auth-reducer";
 import { useNavigate } from "react-router-dom";
+import { FORM_ERROR } from "final-form";
+import classes from "../common/FormsControls/FormControls.module.css";
 
 const LoginForm = (props) => {
   return (
@@ -16,7 +18,14 @@ const LoginForm = (props) => {
       onSubmit={props.onSubmit}
       // initialValues={{ stooge: "larry", employed: false }}
 
-      render={({ handleSubmit, form, submitting, pristine, values }) => (
+      render={({
+        handleSubmit,
+        submitError,
+        form,
+        submitting,
+        pristine,
+        values,
+      }) => (
         <form onSubmit={handleSubmit}>
           <div>
             <Field
@@ -42,6 +51,7 @@ const LoginForm = (props) => {
           <div>
             <Field name="rememberMe" component="input" type="checkbox" />
           </div>
+          {submitError && <div className={classes.error}>{submitError}</div>}
           <div>
             <button>Login</button>
           </div>
@@ -52,8 +62,18 @@ const LoginForm = (props) => {
 };
 
 const Login = (props) => {
-  const onSubmit = (formData) => {
-    props.login(formData.email, formData.password, formData.rememberMe);
+  const onSubmit = async (formData) => {
+    const response = await props.login(
+      formData.email,
+      formData.password,
+      formData.rememberMe
+    );
+
+    if (response) {
+      return { [FORM_ERROR]: "Error" };
+    }
+
+    // return props.login(formData.email, formData.password, formData.rememberMe);
   };
 
   let navigate = useNavigate();

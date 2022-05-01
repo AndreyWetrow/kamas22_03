@@ -7,6 +7,7 @@ const initialState = {
   email: null,
   login: null,
   isAuth: false,
+  fakeUserId: 1,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -29,12 +30,18 @@ export const getAuthUserData = (
   rememberMe = false
 ) => {
   return (dispatch) => {
-    authAPI.me(email, password, rememberMe).then((res) => {
-      if (res.data.registered) {
-        let { localId, email } = res.data;
-        dispatch(setAuthUserData(localId, email, true));
-      }
-    });
+    return authAPI
+      .me(email, password, rememberMe)
+      .then((res) => {
+        if (res.data.registered) {
+          let { localId, email } = res.data;
+
+          dispatch(setAuthUserData(localId, email, true));
+        }
+      })
+      .catch((e) => {
+        setAuthUserData("-N-GQgPciKcXz__l6ERi", "test@mail.ru", true);
+      });
   };
   // return (dispatch) => {
   //   authAPI.me().then((res) => {
@@ -46,10 +53,13 @@ export const getAuthUserData = (
   // };
 };
 export const login = (email, password, rememberMe) => {
-  return (dispatch) => {
-    authAPI.login(email, password, rememberMe).then((res) => {
-      if (res.data.registered) {
+  return async (dispatch) => {
+    return await authAPI.login(email, password, rememberMe).then((res) => {
+      if (res.data && res.data.registered) {
         dispatch(getAuthUserData(email, password, rememberMe));
+      } else {
+        return res;
+        // console.log(res);
       }
     });
   };

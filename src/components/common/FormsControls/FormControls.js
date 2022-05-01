@@ -9,7 +9,9 @@ const FormControl = ({ input, meta, ...props }) => {
       className={classes.formControl + " " + (hasError ? classes.error : "")}
     >
       {props.children}
-      {meta.error && meta.touched && <span>{meta.error}</span>}
+      {(meta.error || meta.submitError) && meta.touched && (
+        <span>{meta.error || meta.submitError}</span>
+      )}
     </div>
   );
 };

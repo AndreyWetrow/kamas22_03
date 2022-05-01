@@ -1,4 +1,5 @@
 import axios from "axios";
+import { logout } from "../redux/auth-reducer";
 
 const instanceFirebase = axios.create({
   baseURL: "https://itcamas2022-default-rtdb.firebaseio.com/",
@@ -62,7 +63,58 @@ export const authAPI = {
     return instanceAuth.post(``, { email, password, rememberMe });
   },
   login(email, password, rememberMe = false) {
-    return instanceAuth.post(``, { email, password, rememberMe });
+    // const getRes = () => {
+    //   return instanceAuth
+    //     .post(``, {
+    //       email,
+    //       password,
+    //       rememberMe,
+    //     })
+    //     .then((response) => {
+    //       return response;
+    //     })
+    //     .catch((error) => {
+    //       // в debugger ошибка появляется, а в error не попадает??????
+    //       return { error: "Введите правильные данные" };
+    //     });
+    // };
+
+    const getRes = async () => {
+      return await instanceAuth
+        .post(``, { email, password, rememberMe })
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          return { error: "Введите правильные данные" };
+        });
+    };
+
+    return getRes();
+    // const getRes = async () => {
+    //   try {
+    //     return await instanceAuth.post(``, {
+    //       email,
+    //       password,
+    //       rememberMe,
+    //     });
+    //   } catch (error) {
+    //     debugger;
+    //     return { error: "Введите правильные данные" };
+    //   }
+    // };
+
+    // return instanceAuth.post(``, { email, password, rememberMe }).then(
+    //   (res) => {
+    //     return res;
+    //   },
+    //   () => {
+    //     // в debbuger ошибка появляется, а в error не попадает??????
+    //     return { error: "Введите правильные данные" };
+    //   }
+    // );
+
+    // return instanceAuth.post(``, { email, password, rememberMe });
   },
   logout(email, password, rememberMe = false) {
     return instanceAuth.post(``, { email, password, rememberMe });
