@@ -97,5 +97,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { login })(Login);
-
-// export default compose(connect(null, { login }), withAuthRedirect)(Login);

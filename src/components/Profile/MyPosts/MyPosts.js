@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Field } from "react-final-form";
+import { Field, Form } from "react-final-form";
 import Post from "./Post/Post";
 import classes from "./MyPosts.module.css";
 import {
@@ -10,7 +10,8 @@ import {
 } from "../../../utils/validators/validators";
 import { Textarea } from "../../common/FormsControls/FormControls";
 
-const MyPosts = (props) => {
+const MyPosts = React.memo((props) => {
+  console.log("RENDER");
   const postsElements = props.posts.map((post) => {
     return (
       <Post key={post.id} message={post.message} likeCounts={post.likeCounts} />
@@ -57,6 +58,6 @@ const MyPosts = (props) => {
       <div className={classes.posts}>{postsElements}</div>
     </div>
   );
-};
+});
 
 export default MyPosts;
