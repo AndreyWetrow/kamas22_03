@@ -47,7 +47,7 @@ class ProfileContainer extends React.Component {
   };
 
   render() {
-    return (
+      return (
       <div>
         <Profile
           {...this.props}

@@ -1,15 +1,34 @@
+import React, { Suspense } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import NavbarContainer from "./components/Navbar/NavbarContainer";
 import UsersContainer from "./components/Users/UsersContainer";
-import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
 import { Component } from "react";
 import { connect } from "react-redux";
 import { initializeApp } from "./redux/app-reducer";
 import Preloader from "./components/common/Preloader/Preloader";
+import withSuspense from "./hoc/withSuspense";
+
+// import ProfileContainer from "./components/Profile/ProfileContainer";
+// import DialogsContainer from "./components/Dialogs/DialogsContainer";
+const DialogsContainer = React.lazy(() =>
+  import("./components/Dialogs/DialogsContainer")
+);
+const ProfileContainer = React.lazy(() =>
+  import("./components/Profile/ProfileContainer")
+);
+
+// function MyComponent() {
+//   return (
+//     <div>
+//       <Suspense fallback={<Preloader/>}>
+//         <DialogsContainer />
+//       </Suspense>
+//     </div>
+//   );
+// }
 
 class App extends Component {
   componentDidMount() {
@@ -35,9 +54,33 @@ class App extends Component {
         <div className={"app-wrapper-content"}>
           <Routes>
             <Route path="login" element={<Login />} />
-            <Route path="profile" element={<ProfileContainer />} />
-            <Route path="profile/:userId" element={<ProfileContainer />} />
-            <Route path="dialogs" element={<DialogsContainer />} />
+            <Route
+              path="profile"
+              // element={
+              //   <Suspense fallback={<Preloader />}>
+              //     <ProfileContainer />
+              //   </Suspense>
+              // }
+              element={withSuspense(ProfileContainer)}
+            />
+            <Route
+              path="profile/:userId"
+              // element={
+              //   <Suspense fallback={<Preloader />}>
+              //     <ProfileContainer />
+              //   </Suspense>
+              // }
+              element={withSuspense(ProfileContainer)}
+            />
+            <Route
+              path="dialogs"
+              // element={
+              //   <Suspense fallback={<Preloader />}>
+              //     <DialogsContainer />
+              //   </Suspense>
+              // }
+              element={withSuspense(DialogsContainer)}
+            />
             <Route path="users" element={<UsersContainer />} />
           </Routes>
         </div>
