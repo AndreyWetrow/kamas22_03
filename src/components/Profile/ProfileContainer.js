@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import {
   getStatus,
   getUserProfile,
+  savePhoto,
   updateStatus,
 } from "../../redux/profile-reducer";
 import { getURLParams } from "../../hoc/GetURLParams/GetURLParams";
@@ -15,31 +16,26 @@ class ProfileContainer extends React.Component {
     super(props);
     this.userId = "";
   }
-  componentDidMount() {
+
+  refreshProfile = () => {
     let userId = this.props.URLId.userId;
 
     if (!userId) {
       userId = this.props.fakeUserId;
-      // userId = 2;
     }
 
     this.props.getUserProfile(userId);
     this.props.getStatus(userId);
+  };
 
-    // let data = {};
-    // let photo = "";
-    //
-    // userAPI.getUser(userId).then((res) => {
-    //   data = res;
-    //   userAPI.getPhoto(userId).then((res) => {
-    //     const bigPhoto = res.url;
-    //     const littlePhoto = res.thumbnailUrl;
-    //     this.props.setUserProfile({
-    //       ...data,
-    //       photo: { ...photo, bigPhoto, littlePhoto },
-    //     });
-    //   });
-    // });
+  componentDidMount() {
+    this.refreshProfile();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.URLId.userId !== prevProps.URLId.userId) {
+      this.refreshProfile();
+    }
   }
 
   onSubmit = (values) => {
@@ -47,13 +43,15 @@ class ProfileContainer extends React.Component {
   };
 
   render() {
-      return (
+    return (
       <div>
         <Profile
           {...this.props}
+          isOwner={!this.props.URLId.userId}
           status={this.props.status}
           updateStatus={this.props.updateStatus}
           userId={this.props.URLId.userId}
+          savePhoto={this.props.savePhoto}
         />
       </div>
     );
@@ -66,6 +64,7 @@ const mapStateToProps = (state) => {
     authorizedUserId: state.auth.userId,
     fakeUserId: state.auth.fakeUserId,
     isAuth: state.auth.isAuth,
+    initialId: state.auth.initialId,
   };
 };
 
@@ -74,6 +73,7 @@ export default compose(
     getUserProfile,
     getStatus,
     updateStatus,
+    savePhoto,
   }),
   getURLParams
   // withAuthRedirect

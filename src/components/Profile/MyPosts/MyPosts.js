@@ -11,7 +11,6 @@ import {
 import { Textarea } from "../../common/FormsControls/FormControls";
 
 const MyPosts = React.memo((props) => {
-  console.log("RENDER");
   const postsElements = props.posts.map((post) => {
     return (
       <Post key={post.id} message={post.message} likeCounts={post.likeCounts} />

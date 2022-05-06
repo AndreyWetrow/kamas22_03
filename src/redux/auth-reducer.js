@@ -8,6 +8,7 @@ const initialState = {
   login: null,
   isAuth: false,
   fakeUserId: 1,
+  initialId: "-N-GQgPciKcXz__l6ERi",
 };
 
 const authReducer = (state = initialState, action) => {

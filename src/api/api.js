@@ -20,7 +20,7 @@ export const userAPI = {
   // },
 
   getProfile(userId) {
-    console.warn("Obsolete method. Use profileAPI");
+    // console.warn("Obsolete method. Use profileAPI");
 
     return profileAPI.getProfile(userId);
   },
@@ -122,11 +122,33 @@ export const authAPI = {
 };
 
 export const profileAPI = {
+  // savePhoto(file, userId) {
+  //   let formData = new FormData();
+  //   formData.append(" photoURL:", file);
+  //   return instanceFirebase
+  //     .patch(`users/${userId}.json`, formData, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     })
+  //     .then((response) => {
+  //       return response;
+  //     });
+  // },
+  savePhoto(file, userId) {
+    return instanceFirebase
+      .patch(`users/${userId}.json`, { photoURL: file })
+      .then((response) => {
+        return response;
+      });
+  },
+
   getProfile(userId) {
     return instancePlaceholder.get(`users/${userId}`).then((response) => {
       return response.data;
     });
   },
+
   getProfileForStatus(userId) {
     return instanceFirebase.get("users.json").then((response) => {
       let userProfile = Object.entries(response.data).filter((item) => {

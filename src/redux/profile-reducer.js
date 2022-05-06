@@ -1,9 +1,11 @@
 import { profileAPI, userAPI } from "../api/api";
+import profile from "../components/Profile/Profile";
 
 const ADD_POST = "ADD_POST";
 const SET_USER_PROFILE = "SET_USER_PROFILE";
 const SET_STATUS = "SET_STATUS";
 const DELETE_POST = "DELETE_POST";
+const SAVE_PHOTO_SUCCESS = "SAVE_PHOTO_SUCCESS";
 
 const initialState = {
   posts: [
@@ -44,6 +46,20 @@ const profileReducer = (state = initialState, action) => {
         status: action.status,
       };
     }
+    case SAVE_PHOTO_SUCCESS: {
+      // let copyProfile = { ...state.profile };
+      //
+      // copyProfile.photo.littlePhoto = action.photos;
+
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          photo: { ...state.profile.photo, littlePhoto: action.photos },
+        },
+        // profile: copyProfile,
+      };
+    }
     case DELETE_POST: {
       return {
         ...state,
@@ -71,6 +87,9 @@ export const setStatus = (status) => {
 };
 export const deletePost = (postId) => {
   return { type: DELETE_POST, postId };
+};
+export const savePhotoSuccess = (photos) => {
+  return { type: SAVE_PHOTO_SUCCESS, photos };
 };
 
 export const getUserProfile = (userId) => {
@@ -110,6 +129,13 @@ export const updateStatus = (userId, status) => async (dispatch) => {
 
   if (+response.status === 200) {
     dispatch(setStatus(status));
+  }
+};
+export const savePhoto = (file, userId) => async (dispatch) => {
+  let response = await profileAPI.savePhoto(file, userId);
+
+  if (+response.status === 200) {
+    dispatch(savePhotoSuccess(response.data.photoURL));
   }
 };
 
