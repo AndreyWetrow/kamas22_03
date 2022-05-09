@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import classes from "./ProfileInfo.module.css";
 import Preloader from "../../common/Preloader/Preloader";
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 import userPhoto from "../../../assets/images/images.png";
+import ProfileDataForm from "./ProfileDataForm";
 
 const ProfileInfo = (props) => {
+  const [editMode, setEditMode] = useState(false);
+
   if (!props.profile) {
     return <Preloader />;
   }
@@ -24,6 +27,12 @@ const ProfileInfo = (props) => {
     if (file) {
       reader.readAsDataURL(file);
     }
+  };
+
+  const onSubmitForm = (formData) => {
+    props.saveProfile(formData).then(() => {
+      setEditMode(false);
+    });
   };
 
   return (
@@ -49,12 +58,18 @@ const ProfileInfo = (props) => {
           alt=""
           className={classes.mainPhoto}
         />
-        {/*<img src={props.profile.photo.bigPhoto} alt="" />*/}
-        <div>Name: {props.profile.name}</div>
-        <div>Username: {props.profile.username}</div>
-        <div>Email: {props.profile.email}</div>
-        <div>Phone: {props.profile.phone}</div>
       </div>
+      {editMode ? (
+        <ProfileDataForm profile={props.profile} onSubmitForm={onSubmitForm} />
+      ) : (
+        <ProfileData
+          profile={props.profile}
+          isOwner={props.isOwner}
+          goToEditMode={() => {
+            setEditMode(true);
+          }}
+        />
+      )}
     </>
   );
 
@@ -77,6 +92,22 @@ const ProfileInfo = (props) => {
   //     <Outlet />
   //   </>
   // );
+};
+const ProfileData = ({ profile, isOwner, goToEditMode }) => {
+  return (
+    <>
+      {isOwner && (
+        <div>
+          <button onClick={goToEditMode}>edit</button>
+        </div>
+      )}
+
+      <div>Name: {profile.name}</div>
+      <div>Username: {profile.username}</div>
+      <div>Email: {profile.email}</div>
+      <div>Phone: {profile.phone}</div>
+    </>
+  );
 };
 
 export default ProfileInfo;

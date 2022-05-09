@@ -3,6 +3,7 @@ import profile from "../components/Profile/Profile";
 
 const ADD_POST = "ADD_POST";
 const SET_USER_PROFILE = "SET_USER_PROFILE";
+const UPDATE_USER_PROFILE = "UPDATE_USER_PROFILE";
 const SET_STATUS = "SET_STATUS";
 const DELETE_POST = "DELETE_POST";
 const SAVE_PHOTO_SUCCESS = "SAVE_PHOTO_SUCCESS";
@@ -38,6 +39,9 @@ const profileReducer = (state = initialState, action) => {
 
     case SET_USER_PROFILE: {
       return { ...state, profile: action.profile };
+    }
+    case UPDATE_USER_PROFILE: {
+      return { ...state, profile: { ...state.profile, ...action.profile } };
     }
 
     case SET_STATUS: {
@@ -80,6 +84,9 @@ export const addPostActionCreator = (newPostText) => {
 
 export const setUserProfile = (profile) => {
   return { type: SET_USER_PROFILE, profile };
+};
+export const updateUserProfile = (profile) => {
+  return { type: UPDATE_USER_PROFILE, profile };
 };
 
 export const setStatus = (status) => {
@@ -125,17 +132,28 @@ export const getStatus = (userId) => async (dispatch) => {
 };
 
 export const updateStatus = (userId, status) => async (dispatch) => {
-  let response = await profileAPI.updateStatusUser(userId, status);
+  try {
+    let response = await profileAPI.updateStatusUser(userId, status);
 
-  if (+response.status === 200) {
-    dispatch(setStatus(status));
-  }
+    if (+response.status === 200) {
+      dispatch(setStatus(status));
+    }
+  } catch (error) {}
 };
 export const savePhoto = (file, userId) => async (dispatch) => {
   let response = await profileAPI.savePhoto(file, userId);
 
   if (+response.status === 200) {
     dispatch(savePhotoSuccess(response.data.photoURL));
+  }
+};
+export const saveProfile = (profile) => async (dispatch) => {
+  let response = await profileAPI.saveProfile(profile);
+
+  if (+response.status === 200) {
+    dispatch(updateUserProfile(response.data));
+  } else {
+    return Promise.reject();
   }
 };
 

@@ -142,6 +142,18 @@ export const profileAPI = {
         return response;
       });
   },
+  saveProfile(profile) {
+    return instancePlaceholder
+      .patch(`users/1`, {
+        email: profile.email,
+        name: profile.name,
+        phone: profile.phone,
+        username: profile.username,
+      })
+      .then((response) => {
+        return response;
+      });
+  },
 
   getProfile(userId) {
     return instancePlaceholder.get(`users/${userId}`).then((response) => {

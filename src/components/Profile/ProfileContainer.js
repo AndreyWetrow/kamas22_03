@@ -5,6 +5,7 @@ import {
   getStatus,
   getUserProfile,
   savePhoto,
+  saveProfile,
   updateStatus,
 } from "../../redux/profile-reducer";
 import { getURLParams } from "../../hoc/GetURLParams/GetURLParams";
@@ -74,6 +75,7 @@ export default compose(
     getStatus,
     updateStatus,
     savePhoto,
+    saveProfile,
   }),
   getURLParams
   // withAuthRedirect

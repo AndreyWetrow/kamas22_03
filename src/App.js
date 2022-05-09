@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import NavbarContainer from "./components/Navbar/NavbarContainer";
 import UsersContainer from "./components/Users/UsersContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
@@ -20,25 +20,21 @@ const ProfileContainer = React.lazy(() =>
   import("./components/Profile/ProfileContainer")
 );
 
-// function MyComponent() {
-//   return (
-//     <div>
-//       <Suspense fallback={<Preloader/>}>
-//         <DialogsContainer />
-//       </Suspense>
-//     </div>
-//   );
-// }
-
 class App extends Component {
+  catchAllUnhandledErrors = (promiseRejectionEvent) => {
+    console.log(promiseRejectionEvent);
+  };
+
   componentDidMount() {
     this.props.initializeApp();
-    // authAPI.me().then((res) => {
-    //   if (res.data.registered) {
-    //     let { localId, email } = res.data;
-    //     this.props.setAuthUserData(localId, email);
-    //   }
-    // });
+    window.addEventListener("unhandledrejection", this.catchAllUnhandledErrors);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener(
+      "unhandledrejection",
+      this.catchAllUnhandledErrors
+    );
   }
 
   render() {
@@ -54,6 +50,8 @@ class App extends Component {
         <div className={"app-wrapper-content"}>
           <Routes>
             <Route path="login" element={<Login />} />
+            {/*<Route path="/" element={withSuspense(ProfileContainer)} />*/}
+            <Route path="/" element={<Navigate to="/profile" replace />} />
             <Route
               path="profile"
               // element={
@@ -82,6 +80,14 @@ class App extends Component {
               element={withSuspense(DialogsContainer)}
             />
             <Route path="users" element={<UsersContainer />} />
+            <Route
+              path="*"
+              element={
+                <main style={{ padding: "1rem" }}>
+                  <p>There's nothing here!</p>
+                </main>
+              }
+            />
           </Routes>
         </div>
       </div>
