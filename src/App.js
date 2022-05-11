@@ -79,7 +79,10 @@ class App extends Component {
               // }
               element={withSuspense(DialogsContainer)}
             />
-            <Route path="users" element={<UsersContainer />} />
+            <Route
+              path="users"
+              element={<UsersContainer pageTitle={"Название страницы"} />}
+            />
             <Route
               path="*"
               element={
