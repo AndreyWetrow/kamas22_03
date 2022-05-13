@@ -1,5 +1,6 @@
 import axios from "axios";
 import { logout } from "../redux/auth-reducer";
+import { ProfileType } from "../types/types";
 
 const instanceFirebase = axios.create({
   baseURL: "https://itcamas2022-default-rtdb.firebaseio.com/",
@@ -19,17 +20,17 @@ export const userAPI = {
   //   });
   // },
 
-  getProfile(userId) {
+  getProfile(userId: number) {
     // console.warn("Obsolete method. Use profileAPI");
 
     return profileAPI.getProfile(userId);
   },
-  getPhoto(userId) {
+  getPhoto(userId: number) {
     return instancePlaceholder
       .get(`photos/${userId}`)
       .then((response) => response.data);
   },
-  getUser(id) {
+  getUser(id: number) {
     return instanceFirebase.get("users.json").then((response) => {
       console.log(response.data);
     });
@@ -42,27 +43,50 @@ export const userAPI = {
       .get("totalCount.json")
       .then((response) => response.data);
   },
-  followUser(userKey) {
+  followUser(userKey: string) {
     return instanceFirebase
       .patch(`users/${userKey}.json`, { followed: false })
       .then((response) => response.status);
   },
-  unfollowUser(userKey) {
+  unfollowUser(userKey: string) {
     return instanceFirebase
       .patch(`users/${userKey}.json`, { followed: true })
       .then((response) => response.status);
   },
 };
+
+export enum ResultCodesEnum {
+  Success = 0,
+  Error = 1,
+}
+
+type MeResponseType = {
+  // data: { localId: number; email: string; registered: boolean };
+  localId: string;
+  email: string;
+  registered: boolean;
+};
+type LoginResponseType = {
+  // data: { localId: number; email: string; registered: boolean };
+  // localId: string;
+  // email: string;
+  // registered: boolean;
+};
+
 export const authAPI = {
   // authData: {
   //   email: "test@mail.ru",
   //   password: "123456",
   //   returnSecureToken: true,
   // },
-  me(email, password, rememberMe) {
-    return instanceAuth.post(``, { email, password, rememberMe });
+  me(email: string, password: string, rememberMe: boolean) {
+    return instanceAuth.post<MeResponseType>(``, {
+      email,
+      password,
+      rememberMe,
+    });
   },
-  login(email, password, rememberMe = false) {
+  login(email: string, password: string, rememberMe = false) {
     // const getRes = () => {
     //   return instanceAuth
     //     .post(``, {
@@ -81,7 +105,7 @@ export const authAPI = {
 
     const getRes = async () => {
       return await instanceAuth
-        .post(``, { email, password, rememberMe })
+        .post<LoginResponseType>(``, { email, password, rememberMe })
         .then((response) => {
           return response;
         })
@@ -116,7 +140,7 @@ export const authAPI = {
 
     // return instanceAuth.post(``, { email, password, rememberMe });
   },
-  logout(email, password, rememberMe = false) {
+  logout(email: string, password: string, rememberMe = false) {
     return instanceAuth.post(``, { email, password, rememberMe });
   },
 };
@@ -135,14 +159,14 @@ export const profileAPI = {
   //       return response;
   //     });
   // },
-  savePhoto(file, userId) {
+  savePhoto(file: any, userId: string) {
     return instanceFirebase
       .patch(`users/${userId}.json`, { photoURL: file })
       .then((response) => {
         return response;
       });
   },
-  saveProfile(profile) {
+  saveProfile(profile: ProfileType) {
     return instancePlaceholder
       .patch(`users/1`, {
         email: profile.email,
@@ -155,27 +179,30 @@ export const profileAPI = {
       });
   },
 
-  getProfile(userId) {
+  getProfile(userId: number) {
     return instancePlaceholder.get(`users/${userId}`).then((response) => {
       return response.data;
     });
   },
 
-  getProfileForStatus(userId) {
+  getProfileForStatus(userId: string) {
     return instanceFirebase.get("users.json").then((response) => {
       let userProfile = Object.entries(response.data).filter((item) => {
+        // @ts-ignore
         return item[1].id === +userId;
       });
 
+      // @ts-ignore
       return userProfile[0][1].status;
     });
   },
 
-  updateStatusUser(userId, status) {
+  updateStatusUser(userId: string, status: string) {
     return instanceFirebase
       .get("users.json")
       .then((response) => {
         let userProfile = Object.entries(response.data).filter((item) => {
+          // @ts-ignore
           return item[1].id === +userId;
         });
 

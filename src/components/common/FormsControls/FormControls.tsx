@@ -1,7 +1,31 @@
 import React from "react";
+// @ts-ignore
 import classes from "./FormControls.module.css";
+import { FieldInputProps, FieldMetaState } from "react-final-form";
 
-const FormControl = ({ input, meta, ...props }) => {
+// : {
+//   input: any;
+//   meta: any;
+//   children: React.ReactNode;
+// }
+
+type FormControlPropsType = {
+  input: FieldInputProps<any>;
+  meta: FieldMetaState<any>;
+  // meta: {
+  //   touched: boolean;
+  //   error: string;
+  //   submitError: boolean;
+  // };
+  children: React.ReactNode;
+};
+// type FormControlType = (params: FormControlParamsType) => React.ReactNode;
+
+const FormControl: React.FC<FormControlPropsType> = ({
+  input,
+  meta,
+  ...props
+}) => {
   let hasError = meta.error && meta.touched;
 
   return (
@@ -16,14 +40,38 @@ const FormControl = ({ input, meta, ...props }) => {
   );
 };
 
-export const Textarea = (props) => {
+export const Textarea = (props: Test) => {
   return (
     <FormControl {...props}>
       <textarea {...props.input} {...props} />
     </FormControl>
   );
 };
-export const Input = (props) => {
+
+// type Test = {
+//   //   input:FieldInputProps<InputType>
+//   //   meta:FieldInputProps<InputType>
+//   // placeholder:string
+//   // input:
+//   //   | React.DetailedHTMLProps<
+//   //       React.InputHTMLAttributes<HTMLInputElement>,
+//   //       HTMLInputElement
+//   //     >
+//   //   | React.DetailedHTMLProps<
+//   //       React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+//   //       HTMLTextAreaElement
+//   //     >;
+//   input: any;
+//   meta: any;
+//   placeholder: string;
+// };
+type Test = {
+  input: FieldInputProps<any>;
+  meta: FieldMetaState<any>;
+  // children: React.ReactNode;
+  placeholder: string;
+};
+export const Input = (props: Test) => {
   return (
     <FormControl {...props}>
       <input {...props.input} {...props} />

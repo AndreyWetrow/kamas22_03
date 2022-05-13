@@ -64,7 +64,6 @@ const profileReducer = (
     }
 
     case SET_USER_PROFILE: {
-      console.log(state);
       return { ...state, profile: action.profile };
     }
     case UPDATE_USER_PROFILE: {
@@ -174,7 +173,7 @@ export const savePhotoSuccess = (
 };
 ////////////
 
-export const getUserProfile = (userId: string) => {
+export const getUserProfile = (userId: number) => {
   return (dispatch: any) => {
     let photo = "";
 
